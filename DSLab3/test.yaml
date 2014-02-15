@@ -4,15 +4,25 @@ configuration:
   - name: alice
     ip: localhost
     port: 8895
+    memberOf:
+      - Group1
   - name: bob
     ip: localhost
     port: 18891
+    memberOf:
+      - Group1
+      - Group2
   - name: charlie
     ip: localhost
     port: 1997
+    memberOf:
+      - Group1
+      - Group2
   - name: daphnie
     ip: localhost
     port: 1998
+    memberOf:
+      - Group2
   - name: logServer
     ip: localhost
     port: 1989
