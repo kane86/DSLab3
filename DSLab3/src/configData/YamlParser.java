@@ -34,6 +34,7 @@ public class YamlParser {
 	public ArrayList<Rule> logRules;
 	public String clockType;
 	public HashMap<String, List<String>> groups;
+	public HashMap<String, List<String>> memberOf;
 
 	public YamlParser(String file) throws IOException {
 		// initialize variables
@@ -89,6 +90,7 @@ public class YamlParser {
 			nodeList.put((String) m.get("name"), new IpPort((String) m.get("ip"),
 					(Integer) m.get("port"), i));
 		}
+		
 		
 		list = (List<Map<String, Object>>) map.get("groups");
 		if (list != null) {
