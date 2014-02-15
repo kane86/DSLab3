@@ -34,6 +34,7 @@ public class YamlParser {
 	public ArrayList<Rule> logRules;
 	public String clockType;
 	public HashMap<String, List<String>> groups;
+	public HashMap<String, List<String>> memberOf;
 
 	public YamlParser(String file) throws IOException {
 		// initialize variables
@@ -43,6 +44,7 @@ public class YamlParser {
 		receiveRules = new ArrayList<Rule>();
 		logRules = new ArrayList<Rule>();
 		groups = new HashMap<String, List<String>>();
+		memberOf = new HashMap<String, List<String>>();
 		ReadFile(file);
 	}
 
@@ -88,7 +90,10 @@ public class YamlParser {
 			Map<String, Object> m = list.get(i);
 			nodeList.put((String) m.get("name"), new IpPort((String) m.get("ip"),
 					(Integer) m.get("port"), i));
+			List<String> memberOfGroup = (List<String>)(m.get("memberOf"));
+			memberOf.put((String) m.get("name"), memberOfGroup);
 		}
+		
 		
 		list = (List<Map<String, Object>>) map.get("groups");
 		if (list != null) {
@@ -159,5 +164,9 @@ public class YamlParser {
 	
 	public boolean isGrpExist(String grpName) {
 		return groups.containsKey(grpName);
+	}
+	
+	public List<String> getMemberOf(String nodename){
+		return memberOf.get(nodename);
 	}
 }
