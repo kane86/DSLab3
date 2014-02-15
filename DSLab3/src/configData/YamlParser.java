@@ -94,6 +94,12 @@ public class YamlParser {
 			memberOf.put((String) m.get("name"), memberOfGroup);
 		}
 		
+		/* Test the new ymal element
+		List<String> test = getMemberOf("bob");
+		for(String testString: test){
+			System.out.println("BOB is Member of "+testString);
+		}
+		*/
 		
 		list = (List<Map<String, Object>>) map.get("groups");
 		if (list != null) {
