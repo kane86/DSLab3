@@ -36,15 +36,21 @@ public class ResourceMsgPasser implements Runnable {
 			System.out.println("[DBG]: Group: " + oneGrp.toString());
 		}
 		
+		// Voting Set
 		votingSet = new VotingSet();
 		tempList = msgPass.configFile.getMemberOf(msgPass.GetLocalName());
 		votingSetGroup = tempList.get(0);
+		getVotingSet(votingSetGroup);
 		
 		System.out.println("[DBG_ResMsg]: Init: votingSetGrp: " + votingSetGroup);
+		System.out.println("[DBG_ResMsg]: Init: votingSet: " + votingSet.toString());
 		
-		/* TODO: Populate the Voting Sets */
-
+		// Resources
 		resources = new HashMap<String, Resource>();
+		//getResources();
+		/* TODO: Change it to getResources once parsing is done */
+		getResourcesStatic();
+		
 		reqQueue = new ResReqQueue();
 		receiveQueue = new ArrayList<Resource>();
 
@@ -277,5 +283,44 @@ public class ResourceMsgPasser implements Runnable {
 		retVotingMsg.setVotingMsgType(VotingMessageType.Ack);
 		msgPass.GetClock().Update();
 		msgPass.send(retVotingMsg);
+	}
+	
+	private void getVotingSet(String votingSetGroup)
+	{	
+		Group group = groupList.get(votingSetGroup);
+		ArrayList<String> members = group.getMembers();
+		
+		for (String dest : members) {
+			this.votingSet.addMember(dest);
+		}
+	}
+	
+	private void getResources()
+	{	
+		Group group = groupList.get(votingSetGroup);
+		ArrayList<String> members = group.getMembers();
+		Resource resource;
+		
+		for (String resName : members) {
+			resource = new Resource(resName);
+			this.resources.put(resName, resource);
+		}
+	}
+	
+	private void getResourcesStatic()
+	{	
+		Group group = groupList.get(votingSetGroup);
+		ArrayList<String> members = new ArrayList<String>();
+		Resource resource;
+		
+		members.add("Res1");
+		members.add("Res2");
+		members.add("Res3");
+		members.add("Res4");
+		
+		for (String resName : members) {
+			resource = new Resource(resName);
+			this.resources.put(resName, resource);
+		}
 	}
 }

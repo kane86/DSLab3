@@ -53,4 +53,18 @@ public class VotingSet {
 		this.name = name;
 		return;
 	}
+	
+	public String toString()
+	{
+		String retString;
+	  	
+		retString = "[VOTING_SET]: {name:"+name+"}";
+		retString = retString + "{Members: [";
+		for (String iter : members) {
+			retString = retString + "member: " + iter + "], ["; 
+			
+		}
+		retString = retString + "]}";
+		return retString;
+	}
 }
