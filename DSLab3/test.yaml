@@ -6,20 +6,28 @@ configuration:
     port: 8895
     memberOf:
       - Group1
+      - Group3
+      - Group4
   - name: bob
     ip: localhost
     port: 18891
     memberOf:
+      - Group1
       - Group2
+      - Group4
   - name: charlie
     ip: localhost
     port: 1997
     memberOf:
+      - Group1
+      - Group2
       - Group3
   - name: daphnie
     ip: localhost
     port: 1998
     memberOf:
+      - Group2
+      - Group3
       - Group4
   - name: logServer
     ip: localhost
