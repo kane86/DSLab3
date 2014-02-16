@@ -35,6 +35,7 @@ public class YamlParser {
 	public String clockType;
 	public HashMap<String, List<String>> groups;
 	public HashMap<String, List<String>> memberOf;
+	public ArrayList<String> resources;
 
 	public YamlParser(String file) throws IOException {
 		// initialize variables
@@ -45,6 +46,7 @@ public class YamlParser {
 		logRules = new ArrayList<Rule>();
 		groups = new HashMap<String, List<String>>();
 		memberOf = new HashMap<String, List<String>>();
+		resources = new ArrayList<String>();
 		ReadFile(file);
 	}
 
@@ -125,6 +127,32 @@ public class YamlParser {
 				logRules.add(new Rule(m));
 			}
 		}
+		
+		list = (List<Map<String, Object>>) map.get("Resources");
+		if(list != null) {
+			for (Map<String, Object> m : list) {
+				resources.add((String)m.get("name"));
+			}
+		}
+		/* Test new added YamlParser
+		for(String test: resources){
+			System.out.println("Resources:" + test);
+		}
+		
+		for(String test2 : memberOf.get("bob") ){
+			System.out.println("Bob is group of:" + test2);
+		}
+		
+		for(String test2 : memberOf.get("alice") ){
+			System.out.println("Bob is group of:" + test2);
+		}
+		
+		for(String test2 : memberOf.get("charlie") ){
+			System.out.println("Bob is group of:" + test2);
+		}
+		*/
+		
+		
 	}
 
 	// check file
