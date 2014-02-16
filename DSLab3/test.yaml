@@ -56,6 +56,6 @@ sendRules:
 receiveRules:
 logRules:
 Resources:
-    name: Resource1
-    name: Resource2
-    name: Resource3
+  - name: Resource1
+  - name: Resource2
+  - name: Resource3
