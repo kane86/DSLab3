@@ -18,7 +18,7 @@ public class ResReqQueue {
 		ResReqQueueNode retNode = null;
 
 		for (ResReqQueueNode iterNode : nodes) {
-			if ((iterNode.getResource().getName().equals(iterNode))) {
+			if ((iterNode.getResource().getName().equals(resource))) {
 				retNode = iterNode;
 				break;
 			}

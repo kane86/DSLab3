@@ -102,4 +102,22 @@ public class Resource {
 
 		return nodeWaiting;
 	}
+	
+	public String toString() {
+		
+		String retString;
+	  	
+		retString = "[RESOURCE]: {name: "+name+"}";
+		retString = retString + "{owner: "+curOwner+"}";
+		retString = retString + "{state: "+state+"}";
+		retString = retString + "{voted: "+voted+"}";
+		retString = retString + "{Members: [";
+		for (String iter : waitingNodes) {
+			retString = retString + "node: " + iter + "], ["; 
+			
+		}
+		
+		retString = retString + "]}";
+		return retString;
+	}
 }

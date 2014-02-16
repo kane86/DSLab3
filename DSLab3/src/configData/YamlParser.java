@@ -197,4 +197,8 @@ public class YamlParser {
 	public List<String> getMemberOf(String nodename){
 		return memberOf.get(nodename);
 	}
+	
+	public ArrayList<String> getResources() {
+		return this.resources;
+	}
 }

@@ -56,7 +56,7 @@ public class VotingMessage extends TimeStampedMessage {
 
 	public String toString() {
 		String retString;
-		retString = "VotingMessage: grpName: [" + this.getGrpName() + "], " + " msgType: [" + this.msgType + "], Votingsender: [" + this.getOrigin() + "]";
+		retString = "VotingMessage: msgType: [" + this.msgType + "], Votingsender: [" + this.getOrigin() + "]";
 		retString = retString + ", MsgSource: [" + getSource() +"]";
 		return retString;
 	}

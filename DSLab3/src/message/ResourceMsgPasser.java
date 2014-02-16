@@ -20,6 +20,8 @@ public class ResourceMsgPasser implements Runnable {
     private ArrayList<Resource> receiveQueue= null;
     HashMap<String, Group> groupList;
     String votingSetGroup;
+    int sendCount = 0;
+    int rcvCount = 0;
     
 	public ResourceMsgPasser(String configuration_filename, String local_name) throws IOException {
 		
@@ -47,9 +49,7 @@ public class ResourceMsgPasser implements Runnable {
 		
 		// Resources
 		resources = new HashMap<String, Resource>();
-		//getResources();
-		/* TODO: Change it to getResources once parsing is done */
-		getResourcesStatic();
+		getResources();
 		
 		reqQueue = new ResReqQueue();
 		receiveQueue = new ArrayList<Resource>();
@@ -68,7 +68,8 @@ public class ResourceMsgPasser implements Runnable {
 		while (true) {
 			rcvdMsg = (VotingMessage)(msgPass.receive());
 			if (rcvdMsg != null) {
-				System.out.println("Rcvd VotingMsg: " + rcvdMsg.toString());
+				this.rcvCount++;
+				//System.out.println("Rcvd VotingMsg: " + rcvdMsg.toString());
 				switch (rcvdMsg.getVotingMsgType()) {
 
 				case Req:
@@ -95,9 +96,6 @@ public class ResourceMsgPasser implements Runnable {
 		String grpName = null;
 		Resource resource = resources.get(resourceName);
 		ResReqQueueNode queueNode = reqQueue.getNode(resourceName);
-		VotingSet votingSet = null;
-
-		/* TODO: After parsing code, get Voting Set */
 
 		if (resource == null) {
 			/* Invalid resource */
@@ -112,10 +110,11 @@ public class ResourceMsgPasser implements Runnable {
 		}
 
 		if (queueNode == null) {
-			queueNode = new ResReqQueueNode(resource); 
+			queueNode = new ResReqQueueNode(resource, votingSet.getMembers()); 
 			reqQueue.addNewNode(queueNode);
 		} else {
 			System.out.println("[DBG_LOCK]: There is already a pending request");
+			return;
 		}
 
 		resource.setState(ResourceState.WANTED);
@@ -139,21 +138,25 @@ public class ResourceMsgPasser implements Runnable {
 	public void release(String resourceName) {
 
 		Resource resource = resources.get(resourceName);
-		VotingSet votingSet = null;
-
-		/* TODO: After parsing code, get Voting Set */
-
 		if (resource == null) {
 			/* Invalid resource */
 			System.out.println("[DBG_LOCK]: Invalid input: " + resourceName);
 			return;
 		}
-
-
+		
+		resource.setCurOwner(null);
 		resource.setState(ResourceState.RELEASED);
 		multCastRel(votingSet, resourceName);
 	}
-
+	
+	public int getSendCount(){
+		return this.sendCount;
+	}
+	
+	public int getRecvCount(){
+		return this.rcvCount;
+	}
+	
 	private void processReqMsg(VotingMessage rcvdMsg) {
 
 		/* Received a resource request message */
@@ -164,6 +167,7 @@ public class ResourceMsgPasser implements Runnable {
 		senderName = rcvdMsg.getSource();
 		resName = rcvdMsg.getResName();
 		resource = resources.get(resName);
+		System.out.println("[DBG_ProcReqMsg]: ReqMsg: " + rcvdMsg.toString());
 
 		if (resource == null) {
 			System.out.println("[DBG_ProcReqMsg]: Resource does not exist");
@@ -172,9 +176,12 @@ public class ResourceMsgPasser implements Runnable {
 
 		if ((resource.isResHeld() == true) ||  (resource.getVoted() == true)) {
 			/* enqueue the request */
+			System.out.println("[DBG_ProcReqMsg]: Enqueue Req");
 			resource.addWaitingNode(rcvdMsg.getOrigin());
 		} else {
 			/* Send reply to request sender */
+			System.out.println("[DBG_ProcReqMsg]: Reply Ack");
+			resource.setVoted(true);
 			uniCastAck(senderName, resName);
 		}
 	}
@@ -189,7 +196,8 @@ public class ResourceMsgPasser implements Runnable {
 		senderName = rcvdMsg.getSource();
 		resName = rcvdMsg.getResName();
 		resource = resources.get(resName);
-		queueNode = this.reqQueue.getNode(resName);
+		queueNode = reqQueue.getNode(resName);
+		System.out.println("[DBG_ProcRAckMsg]: AckMsg: " + rcvdMsg.toString());
 
 		if (queueNode == null) {
 			/* No Pending request sent from my side */
@@ -205,6 +213,8 @@ public class ResourceMsgPasser implements Runnable {
 		if (queueNode.getUnAckCount() == 0) {
 			/* Nothing unAcked left lets deliver the message */
 			System.out.println("[DBG_multCast]: processRcvdMessage, unAck count ZERO for resource: " + resName);
+			resource.setCurOwner(msgPass.GetLocalName());
+			resource.setState(ResourceState.HELD);
 			reqQueue.remNode(queueNode);
 			deliverResource(resource);
 		}
@@ -220,6 +230,7 @@ public class ResourceMsgPasser implements Runnable {
 		senderName = rcvdMsg.getSource();
 		resName = rcvdMsg.getResName();
 		resource = resources.get(resName);
+		System.out.println("[DBG_ProcRelMsg]: RelMsg: " + rcvdMsg.toString());
 
 		if (resource == null) {
 			System.out.println("[DBG_ProcReqMsg]: Resource does not exist");
@@ -232,6 +243,7 @@ public class ResourceMsgPasser implements Runnable {
 			resource.setVoted(false);
 		} else {
 			/* Send reply to request sender */
+			resource.setVoted(true);
 			uniCastAck(waitingNode, resName);
 		}
 	}
@@ -256,6 +268,7 @@ public class ResourceMsgPasser implements Runnable {
 			votingMsg.setVotingMsgType(VotingMessageType.Req);
 			msgPass.GetClock().Update();
 			msgPass.send(votingMsg);
+			this.sendCount++;
 		}
 	}
 
@@ -273,6 +286,7 @@ public class ResourceMsgPasser implements Runnable {
 			votingMsg.setVotingMsgType(VotingMessageType.Release);
 			msgPass.GetClock().Update();
 			msgPass.send(votingMsg);
+			this.sendCount++;
 		}
 	}
 
@@ -283,6 +297,7 @@ public class ResourceMsgPasser implements Runnable {
 		retVotingMsg.setVotingMsgType(VotingMessageType.Ack);
 		msgPass.GetClock().Update();
 		msgPass.send(retVotingMsg);
+		this.sendCount++;
 	}
 	
 	private void getVotingSet(String votingSetGroup)
@@ -297,12 +312,12 @@ public class ResourceMsgPasser implements Runnable {
 	
 	private void getResources()
 	{	
-		Group group = groupList.get(votingSetGroup);
-		ArrayList<String> members = group.getMembers();
+		ArrayList<String> resNames = msgPass.configFile.getResources();
 		Resource resource;
 		
-		for (String resName : members) {
+		for (String resName : resNames) {
 			resource = new Resource(resName);
+			System.out.println("[DBG_RescPasser]: resName: " + resName);
 			this.resources.put(resName, resource);
 		}
 	}

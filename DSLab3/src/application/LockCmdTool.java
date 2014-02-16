@@ -64,18 +64,9 @@ public class LockCmdTool {
             		//this.msgPasser.send(new TimeStampedMessage(array[0], array[1], array[2], null));
             		//this.msgPasser.multCast(array[0], array[1], false, array[2]);
             		
-            	} else if(cmdInput.equals("receive")) {
+            	}   else if(array.length == 2) {
             		
-            		resourceName = this.msgPasser.receive();		
-            		if (resourceName == null) {
-            			System.out.println("Nothing to pass to Aplication!");
-            		} else {
-            			System.out.println("We received: " + resourceName);
-            		}
-            		
-            	}  else if(array.length == 2) {
-            		
-            		if(array[0].equals("receive") && array[1].equals("log")) {
+            		if (array[0].equals("receive") && array[1].equals("log")) {
             			//msg = this.msgPasser.receive();
             			if(msg == null) {
             				System.out.println("Nothing to pass to Aplication!");
@@ -92,6 +83,11 @@ public class LockCmdTool {
             		} else if(array[0].equals("release")) {
             			msgPasser.release(array[1]);
             			
+            		} else if (array[0].equals("show") && array[1].equals("sendCount")) {
+            			System.out.println("Sent: " + msgPasser.getSendCount());
+
+            		} else if (array[0].equals("show") && array[1].equals("recvCount")) {
+            			System.out.println("Recv: " + msgPasser.getRecvCount());
             		} else {
             			System.out.println("Invalid Command!");
             		}
@@ -103,6 +99,15 @@ public class LockCmdTool {
             		} else {
             			
             			System.out.println("Invalid Command!");
+            		}
+            		
+            	} else if(cmdInput.equals("receive")) {
+            		
+            		resourceName = this.msgPasser.receive();		
+            		if (resourceName == null) {
+            			System.out.println("Nothing to pass to Aplication!");
+            		} else {
+            			System.out.println("We received: " + resourceName);
             		}
             		
             	} else {
