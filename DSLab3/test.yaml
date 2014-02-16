@@ -47,3 +47,7 @@ sendRules:
     kind : qweqweqweqweqweqwe
 receiveRules:
 logRules:
+Resources:
+    name: Resource1
+    name: Resource2
+    name: Resource3

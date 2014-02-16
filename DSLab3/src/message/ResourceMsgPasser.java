@@ -13,18 +13,35 @@ import clockService.VectorClock;
 public class ResourceMsgPasser implements Runnable {
 
 	public MessagePasser msgPass;
-    private HashMap<String, VotingSet> votingSets;
+    VotingSet votingSet;
     private HashMap<String, Resource> resources;
     private Thread receiveThread;
     private ResReqQueue reqQueue= null;
     private ArrayList<Resource> receiveQueue= null;
+    HashMap<String, Group> groupList;
+    String votingSetGroup;
+    
 	public ResourceMsgPasser(String configuration_filename, String local_name) throws IOException {
+		
+		List<String> tempList;
 
 		msgPass = new MessagePasser(configuration_filename, local_name);
 
 		// create the groups
-		votingSets = new HashMap<String, VotingSet>();	
-
+		groupList = new HashMap<String, Group>();	
+		HashMap<String, List<String>> groups = msgPass.configFile.getGroups();
+		for (Map.Entry<String, List<String>> entry : groups.entrySet()) {
+			Group oneGrp = new Group(entry.getKey(), entry.getValue(), msgPass.configFile.configList.size(), msgPass.configFile.nodeList.get(local_name).index);
+			groupList.put(entry.getKey(), oneGrp);
+			System.out.println("[DBG]: Group: " + oneGrp.toString());
+		}
+		
+		votingSet = new VotingSet();
+		tempList = msgPass.configFile.getMemberOf(msgPass.GetLocalName());
+		votingSetGroup = tempList.get(0);
+		
+		System.out.println("[DBG_ResMsg]: Init: votingSetGrp: " + votingSetGroup);
+		
 		/* TODO: Populate the Voting Sets */
 
 		resources = new HashMap<String, Resource>();
