@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class VotingSet {
    
     private ArrayList<String> members = null;
+    String name;
   
 	public VotingSet(List<String> membersInGrp) {
 	
@@ -15,6 +16,21 @@ public class VotingSet {
 		for (String member : membersInGrp) {
 			members.add(member);
 		}
+	}
+	
+	public VotingSet(String name) {
+		members = new ArrayList<String>();
+		this.name = name;
+	}
+	
+	public VotingSet(List<String> membersInGrp, String name) {
+		
+		members = new ArrayList<String>();
+		for (String member : membersInGrp) {
+			members.add(member);
+		}
+		
+		this.name = name;
 	}
 	
 	public VotingSet() {
@@ -27,5 +43,14 @@ public class VotingSet {
 	
 	public ArrayList<String> getMembers() {
 		return members;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+		return;
 	}
 }

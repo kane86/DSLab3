@@ -2,5 +2,6 @@ package message;
 
 public enum ResourceState {
 	HELD,
-	FREE
+	RELEASED,
+	WANTED
 }
