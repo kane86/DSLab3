@@ -5,29 +5,21 @@ configuration:
     ip: localhost
     port: 8895
     memberOf:
-      - Group3
-      - Group4
-  - name: bob
+      - Group1
+  - name: b
     ip: localhost
     port: 18891
     memberOf:
-      - Group1
       - Group2
   - name: c
-      - Group4
-  - name: charlie
     ip: localhost
     port: 1997
     memberOf:
-      - Group1
-      - Group2
       - Group3
   - name: d
     ip: localhost
     port: 1998
     memberOf:
-      - Group2
-      - Group3
       - Group4
   - name: e
     ip: localhost
