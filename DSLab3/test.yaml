@@ -1,50 +1,80 @@
 clock:
   type: vector
 configuration:
-  - name: alice
+  - name: a
     ip: localhost
     port: 8895
     memberOf:
       - Group1
-  - name: bob
+  - name: b
     ip: localhost
     port: 18891
     memberOf:
       - Group2
-  - name: charlie
+  - name: c
     ip: localhost
     port: 1997
     memberOf:
       - Group3
-  - name: daphnie
+  - name: d
     ip: localhost
     port: 1998
     memberOf:
       - Group4
+  - name: e
+    ip: localhost
+    port: 1999
+    memberOf:
+      - Group5
+  - name: f
+    ip: localhost
+    port: 2000
+    memberOf:
+      - Group6
+  - name: g
+    ip: localhost
+    port: 2001
+    memberOf:
+      - Group7
   - name: logServer
     ip: localhost
-    port: 1989
+    port: 2002
 groups :
   - name : Group1
     members :
-      - alice
-      - bob
-      - charlie
+      - a
+      - b
+      - c
   - name : Group2
     members :
-      - daphnie
-      - bob
-      - charlie
+      - b
+      - d
+      - f
   - name : Group3
     members :
-      - daphnie
-      - alice
-      - charlie
+      - c
+      - e
+      - f
   - name : Group4
     members :
-      - daphnie
-      - bob
-      - alice
+      - a
+      - d
+      - e
+  - name : Group5
+    members :
+      - b
+      - e
+      - g
+  - name : Group6
+    members :
+      - a
+      - f
+      - g
+  - name : Group7
+    members :
+      - b
+      - c
+      - g
 sendRules:
   - action : delay
     src : alice

@@ -268,6 +268,7 @@ public class ResourceMsgPasser implements Runnable {
 			votingMsg.setVotingMsgType(VotingMessageType.Req);
 			msgPass.GetClock().Update();
 			msgPass.send(votingMsg);
+			System.out.println("[DBG_multCast]: Incr sendCount");
 			this.sendCount++;
 		}
 	}
@@ -278,7 +279,7 @@ public class ResourceMsgPasser implements Runnable {
 			System.out.println("[ERR_multCast]: Empty Group");
 			return;
 		}
-		System.out.println("[DBG_multCast]: Enter: grpName: " + votingSet.getName());
+		System.out.println("[DBG_multCastRel]: Enter: grpName: " + votingSet.getName());
 
 		for (String dest : members) {
 			VotingMessage votingMsg = new VotingMessage(msgPass.GetLocalName(), votingSet.getName(), resName, dest, 
@@ -286,6 +287,7 @@ public class ResourceMsgPasser implements Runnable {
 			votingMsg.setVotingMsgType(VotingMessageType.Release);
 			msgPass.GetClock().Update();
 			msgPass.send(votingMsg);
+			System.out.println("[DBG_multCastRel]: Incr sendCount");
 			this.sendCount++;
 		}
 	}
@@ -297,6 +299,7 @@ public class ResourceMsgPasser implements Runnable {
 		retVotingMsg.setVotingMsgType(VotingMessageType.Ack);
 		msgPass.GetClock().Update();
 		msgPass.send(retVotingMsg);
+		System.out.println("[DBG_uniCastAck]: Incr sendCount");
 		this.sendCount++;
 	}
 	
