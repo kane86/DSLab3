@@ -1,0 +1,92 @@
+clock:
+  type: logical
+configuration:
+  - name: a
+    ip: localhost
+    port: 8895
+    memberOf:
+      - Group1
+      - Group4
+      - Group6
+  - name: b
+    ip: localhost
+    port: 18891
+    memberOf:
+      - Group1
+      - Group2
+      - Group5
+  - name: c
+    ip: localhost
+    port: 1997
+    memberOf:
+      - Group1
+      - Group3
+  - name: d
+    ip: localhost
+    port: 1998
+    memberOf:
+      - Group2
+      - Group4
+  - name: e
+    ip: localhost
+    port: 1999
+    memberOf:
+      - Group3
+      - Group4
+      - Group5
+  - name: f
+    ip: localhost
+    port: 2000
+    memberOf:
+      - Group2
+      - Group3
+      - Group6
+  - name: g
+    ip: localhost
+    port: 2001
+    memberOf:
+      - Group5
+      - Group6
+  - name: logServer
+    ip: localhost
+    port: 2002
+groups :
+  - name : Group1
+    members :
+      - a
+      - b
+      - c
+      - g
+      - e
+  - name : Group2
+    members :
+      - b
+      - d
+      - f
+  - name : Group3
+    members :
+      - c
+      - e
+      - f
+  - name : Group4
+    members :
+      - a
+      - d
+      - e
+  - name : Group5
+    members :
+      - b
+      - e
+      - g
+  - name : Group6
+    members :
+      - a
+      - f
+      - g
+sendRules:
+receiveRules:
+logRules:
+Resources:
+  - name: R1
+  - name: R2
+  - name: R3
