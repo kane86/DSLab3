@@ -96,7 +96,8 @@ public class YamlParser {
 			memberOf.put((String) m.get("name"), memberOfGroup);
 		}
 		
-		
+		int counter = 0;
+		int cmpFlag = 0;
 		list = (List<Map<String, Object>>) map.get("groups");
 		if (list != null) {
 			for (int i = 0; i < list.size(); ++i) {
@@ -104,8 +105,23 @@ public class YamlParser {
 				String grpName = (String)(m.get("name"));
 				List<String> members = (List<String>)(m.get("members"));
 				groups.put(grpName, members);
+				
+				if( i == 0){
+					counter= members.size();
+				}
+				else{
+					if(members.size() != counter){
+						cmpFlag = 1;
+					}
+				}
 			}
 		}
+		
+		if (cmpFlag == 1){
+			System.out.println("The processes do not have a voting set of the same size");
+			System.exit(0);
+		}
+		
 
 		list = (List<Map<String, Object>>) map.get("sendRules");
 		if (list != null) {
